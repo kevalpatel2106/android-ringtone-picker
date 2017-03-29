@@ -75,7 +75,7 @@ public class RingtonePickerBuilder {
     }
 
     public RingtonePickerBuilder setCurrentRingtoneUri(@Nullable Uri currentRingtoneUri) {
-        mCurrentRingtoneUri = currentRingtoneUri.toString();
+        if (currentRingtoneUri != null) mCurrentRingtoneUri = currentRingtoneUri.toString();
         return this;
     }
 
