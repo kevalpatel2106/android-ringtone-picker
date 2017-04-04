@@ -1,4 +1,4 @@
-package ringotonepicker.sample.com.ringtonepicker;
+package com.ringtonepicker.sample;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
+import com.ringtonepicker.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                     //If set null, negative button will not be displayed.
                     ringtonePickerBuilder.setCancelButtonText("CANCEL");
 
-                    //Set flag true if you want to play the sample of the clicked tone.
+                    //Set flag true if you want to play the com.ringtonepicker.sample of the clicked tone.
                     ringtonePickerBuilder.setPlaySampleWhileSelection(playRingtoneSwitch.isChecked());
 
                     //Set the callback listener.

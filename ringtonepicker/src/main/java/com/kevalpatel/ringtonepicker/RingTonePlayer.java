@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * Created by Keval on 29-Mar-17.
- * This class plays the ringtone for the sample whenever user selects any from the list.
+ * This class plays the ringtone for the com.ringtonepicker.sample whenever user selects any from the list.
  *
  * @author {@link 'https://github.com/kevalpatel2106'}
  */

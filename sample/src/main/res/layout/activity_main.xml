@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context="ringotonepicker.sample.com.ringtonepicker.MainActivity">
+    tools:context="com.ringtonepicker.sample.MainActivity">
 
     <Button
         android:id="@+id/btn_pick_ringtone"

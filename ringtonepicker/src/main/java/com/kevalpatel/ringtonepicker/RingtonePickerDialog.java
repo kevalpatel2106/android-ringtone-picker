@@ -151,7 +151,7 @@ public final class RingtonePickerDialog extends DialogFragment {
                                 mCurrentToneTitle = titles[which];
                                 mCurrentToneUri = mRingTones.get(mCurrentToneTitle);
 
-                                //Play the tone sample
+                                //Play the tone com.ringtonepicker.sample
                                 if (isPlaySample) {
                                     try {
                                         mRingTonePlayer.playRingtone(mCurrentToneUri);
@@ -333,7 +333,7 @@ public final class RingtonePickerDialog extends DialogFragment {
         }
 
         /**
-         * Boolean to indicate weather to play sample sound while use select any ringtone from the list
+         * Boolean to indicate weather to play com.ringtonepicker.sample sound while use select any ringtone from the list
          * or not?
          *
          * @param playSample if true, selected ringtone will play for one time.
