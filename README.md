@@ -1,7 +1,7 @@
 # android-ringtone-picker
 [![Download](https://api.bintray.com/packages/kevalpatel2106/maven/android-ringtone-picker/images/download.svg) ](https://bintray.com/kevalpatel2106/maven/android-ringtone-picker/_latestVersion)
 
-##License
+## License
 Copyright 2017 Keval Patel
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
