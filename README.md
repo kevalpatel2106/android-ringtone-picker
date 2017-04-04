@@ -1,6 +1,18 @@
 # android-ringtone-picker
 [![Download](https://api.bintray.com/packages/kevalpatel2106/maven/android-ringtone-picker/images/download.svg) ](https://bintray.com/kevalpatel2106/maven/android-ringtone-picker/_latestVersion)
 
+#### Simple Ringtone Picker dialog which allows you to pick different sounds from ringtone, alarm tone, notification tone and music from external storage.
+
+## Contribute:
+- Still there are many open weather apis to implement. Any pull request are most welcome.
+**Simple 3 step to contribute into this repo:**
+1. Fork the project.
+2. Make required changes and commit.
+3. Generate pull request. Mention all the required description regarding changes you made.
+
+## Questions:
+If you have any questions, hit me on twitter [@kevalonly77](https://twitter.com/Kevalonly77) .
+
 ## License
 Copyright 2017 Keval Patel
 
