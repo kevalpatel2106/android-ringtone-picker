@@ -57,7 +57,7 @@ public final class RingtonePickerDialog extends DialogFragment {
         //Do nothing.
     }
 
-    static void launchRingtonePicker(@NonNull FragmentManager fragmentManager,
+    private static void launchRingtonePicker(@NonNull FragmentManager fragmentManager,
                                      @Nullable String title,
                                      @NonNull String positiveButtonText,
                                      @Nullable String negativeButtonText,
