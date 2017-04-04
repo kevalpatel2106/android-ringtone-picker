@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
-import com.ringtonepicker.R;
 
 public class MainActivity extends AppCompatActivity {
 
