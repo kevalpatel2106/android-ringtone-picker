@@ -45,9 +45,9 @@
         android:id="@+id/cb_ringtone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checked="true"
         android:layout_above="@id/cb_notification"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:checked="true"
         android:gravity="center"
         android:text="Ringtone"/>
 
@@ -59,12 +59,21 @@
         android:layout_above="@id/cb_ringtone"
         android:text="Ringtone types: "/>
 
-    <TextView
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_play_ringtone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:layout_marginBottom="20dp"
         android:layout_above="@id/tv_hearing_1"
-        android:layout_alignParentTop="true"
+        android:text="Play ringtone"/>
+
+    <TextView
         android:id="@+id/tv_ringtone_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/switch_play_ringtone"
+        android:layout_alignParentTop="true"
         android:gravity="center"
         android:text="No ringtone selected"/>
 

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         final CheckedTextView alarmCb = (CheckedTextView) findViewById(R.id.cb_alarm);
         alarmCb.setOnClickListener(mCheckBoxClickListener);
 
+        final SwitchCompat playRingtoneSwitch = (SwitchCompat) findViewById(R.id.switch_play_ringtone);
         final TextView ringtoneTv = (TextView) findViewById(R.id.tv_ringtone_info);
 
         findViewById(R.id.btn_pick_ringtone).setOnClickListener(new View.OnClickListener() {
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                     ringtonePickerBuilder.setCancelButtonText("CANCEL");
 
                     //Set flag true if you want to play the sample of the clicked tone.
-                    ringtonePickerBuilder.setPlaySampleWhileSelection(true);
+                    ringtonePickerBuilder.setPlaySampleWhileSelection(playRingtoneSwitch.isChecked());
 
                     //Set the callback listener.
                     ringtonePickerBuilder.setListener(new RingtonePickerListener() {

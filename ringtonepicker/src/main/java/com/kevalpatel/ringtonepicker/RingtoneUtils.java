@@ -65,8 +65,8 @@ public final class RingtoneUtils {
      * uri of the sound as value in given hashmap.
      *
      * @param context       instance of the caller
-     * @param type          type of the ringtone from {@link RingtonePickerBuilder#TYPE_NOTIFICATION},
-     *                      {@link RingtonePickerBuilder#TYPE_RINGTONE} or {@link RingtonePickerBuilder#TYPE_ALARM}
+     * @param type          type of the ringtone from {@link RingtonePickerDialog.Builder#TYPE_NOTIFICATION},
+     *                      {@link RingtonePickerDialog.Builder#TYPE_RINGTONE} or {@link RingtonePickerDialog.Builder#TYPE_ALARM}
      * @param ringTonesList Hash map in which alarm tone will be added.
      */
     private static void getTone(Context context,

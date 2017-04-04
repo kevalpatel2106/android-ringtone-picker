@@ -104,7 +104,7 @@ public final class RingtonePickerDialog extends DialogFragment {
                     RingtoneUtils.getRingTone(getActivity(), mRingTones);
                     break;
                 case Builder.TYPE_ALARM:
-                    RingtoneUtils.getRingTone(getActivity(), mRingTones);
+                    RingtoneUtils.getAlarmTones(getActivity(), mRingTones);
                     break;
                 case Builder.TYPE_MUSIC:
                     //Check for the write permission
@@ -118,7 +118,7 @@ public final class RingtonePickerDialog extends DialogFragment {
                     RingtoneUtils.getMusic(getActivity(), mRingTones);
                     break;
                 case Builder.TYPE_NOTIFICATION:
-                    RingtoneUtils.getRingTone(getActivity(), mRingTones);
+                    RingtoneUtils.getNotificationTones(getActivity(), mRingTones);
                     break;
             }
         }
