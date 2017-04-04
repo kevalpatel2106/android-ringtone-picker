@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED) {
 
-                    RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog.Builder(getSupportFragmentManager());
+                    RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
+                            .Builder(MainActivity.this, getSupportFragmentManager());
 
                     //Set title of the dialog.
                     //If set null, no title will be displayed.
