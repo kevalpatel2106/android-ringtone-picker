@@ -17,10 +17,12 @@ import java.util.HashMap;
 
 /**
  * Created by Keval on 20-Feb-17.
+ * This class contains utility classes for the ringtone.
  *
  * @author {@link 'https://github.com/kevalpatel2106'}
  */
 
+@SuppressWarnings("WeakerAccess")
 public final class RingtoneUtils {
     /**
      * Load the list of all the ringtones registered using {@link RingtoneManager}. It will add title as the key and
@@ -111,16 +113,34 @@ public final class RingtoneUtils {
         }
     }
 
+    /**
+     * Get the system selected default ringtone.
+     *
+     * @return Uri of the selected ringtone. You may need android.permission.READ_EXTERNAL_STORAGE
+     * permission to read the ringtone selected from the external storage.
+     */
     @Nullable
     public static Uri getSystemRingtoneTone() {
         return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
     }
 
+    /**
+     * Get the system selected default alarm tone.
+     *
+     * @return Uri of the selected alarm tone. You may need android.permission.READ_EXTERNAL_STORAGE
+     * permission to read the ringtone selected from the external storage.
+     */
     @Nullable
     public static Uri getSystemAlarmTone() {
         return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
     }
 
+    /**
+     * Get the system selected default notification tone.
+     *
+     * @return Uri of the selected notification tone. You may need android.permission.READ_EXTERNAL_STORAGE
+     * permission to read the ringtone selected from the external storage.
+     */
     @Nullable
     public static Uri getSystemNotificationTone() {
         return RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

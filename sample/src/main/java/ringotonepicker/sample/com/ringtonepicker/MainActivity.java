@@ -3,14 +3,14 @@ package ringotonepicker.sample.com.ringtonepicker;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
 
-import com.kevalpatel.ringtonepicker.RingtonePickerBuilder;
+import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //Application needs read storage permission for RingtonePickerBuilder.TYPE_MUSIC .
+                //Application needs read storage permission for Builder.TYPE_MUSIC .
                 if (ActivityCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED) {
 
-                    RingtonePickerBuilder ringtonePickerBuilder = new RingtonePickerBuilder(getSupportFragmentManager());
+                    RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog.Builder(getSupportFragmentManager());
 
                     //Set title of the dialog.
                     //If set null, no title will be displayed.
@@ -63,13 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
                     //Add the desirable ringtone types.
                     if (musicCb.isChecked())
-                        ringtonePickerBuilder.addRingtoneType(RingtonePickerBuilder.TYPE_MUSIC);
+                        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_MUSIC);
                     if (notificationCb.isChecked())
-                        ringtonePickerBuilder.addRingtoneType(RingtonePickerBuilder.TYPE_NOTIFICATION);
+                        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_NOTIFICATION);
                     if (ringtoneCb.isChecked())
-                        ringtonePickerBuilder.addRingtoneType(RingtonePickerBuilder.TYPE_RINGTONE);
+                        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_RINGTONE);
                     if (alarmCb.isChecked())
-                        ringtonePickerBuilder.addRingtoneType(RingtonePickerBuilder.TYPE_ALARM);
+                        ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM);
 
                     //set the text to display of the positive (ok) button.
                     //If not set OK will be the default text.

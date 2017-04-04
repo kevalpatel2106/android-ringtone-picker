@@ -4,8 +4,10 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -13,16 +15,23 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 
+import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by Keval on 29-Mar-17.
+ * Ringtone picker dialog.
+ * Never initiate ringtone picker dialog directly using {@link DialogFragment#show(FragmentManager, String)}.
+ * Use {@link Builder} to initiate ringtone picker.
  *
  * @author {@link 'https://github.com/kevalpatel2106'}
+ * @see Builder
  */
 
-class RingtonePickerDialog extends DialogFragment {
+public final class RingtonePickerDialog extends DialogFragment {
     private static final String ARG_DIALOG_TITLE = "arg_dialog_title";
     private static final String ARG_DIALOG_POSITIVE = "arg_dialog_positive";
     private static final String ARG_DIALOG_NEGATIVE = "arg_dialog_negative";
@@ -36,6 +45,15 @@ class RingtonePickerDialog extends DialogFragment {
     private String mCurrentToneTitle;
     private Uri mCurrentToneUri;
     private RingTonePlayer mRingTonePlayer;
+
+    /**
+     * Public constructor.
+     * <B>Note:</B> Don't use this constructor to create and show dialog. Use {@link RingtonePickerDialog.Builder}
+     * instead.
+     */
+    public RingtonePickerDialog() {
+        //Do nothing.
+    }
 
     static void launchRingtonePicker(@NonNull FragmentManager fragmentManager,
                                      @Nullable String title,
@@ -80,13 +98,13 @@ class RingtonePickerDialog extends DialogFragment {
         //noinspection ConstantConditions
         for (int type : types) {
             switch (type) {
-                case RingtonePickerBuilder.TYPE_RINGTONE:
+                case Builder.TYPE_RINGTONE:
                     RingtoneUtils.getRingTone(getActivity(), mRingTones);
                     break;
-                case RingtonePickerBuilder.TYPE_ALARM:
+                case Builder.TYPE_ALARM:
                     RingtoneUtils.getRingTone(getActivity(), mRingTones);
                     break;
-                case RingtonePickerBuilder.TYPE_MUSIC:
+                case Builder.TYPE_MUSIC:
                     //Check for the write permission
                     if (ActivityCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -97,7 +115,7 @@ class RingtonePickerDialog extends DialogFragment {
                     //noinspection MissingPermission
                     RingtoneUtils.getMusic(getActivity(), mRingTones);
                     break;
-                case RingtonePickerBuilder.TYPE_NOTIFICATION:
+                case Builder.TYPE_NOTIFICATION:
                     RingtoneUtils.getRingTone(getActivity(), mRingTones);
                     break;
             }
@@ -132,7 +150,14 @@ class RingtonePickerDialog extends DialogFragment {
                                 mCurrentToneUri = mRingTones.get(mCurrentToneTitle);
 
                                 //Play the tone sample
-                                if (isPlaySample) mRingTonePlayer.playRingtone(mCurrentToneUri);
+                                if (isPlaySample) {
+                                    try {
+                                        mRingTonePlayer.playRingtone(mCurrentToneUri);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        //Cannot play ringtone
+                                    }
+                                }
                             }
                         })
                 .setPositiveButton(getArguments().getString(ARG_DIALOG_POSITIVE),
@@ -157,6 +182,12 @@ class RingtonePickerDialog extends DialogFragment {
         return builder.create();
     }
 
+    /**
+     * Get the position of the ringtone in {@link #mRingTones} based on the uri.
+     *
+     * @param uri Uri of the ringtone to find.
+     * @return position of the uri in {@link #mRingTones} hash map.
+     */
     private int getUriPosition(@NonNull Uri uri) {
         Uri[] values = mRingTones.values().toArray(new Uri[mRingTones.size()]);
         for (int i = 0; i < values.length; i++) {
@@ -170,6 +201,111 @@ class RingtonePickerDialog extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        //Release media player
         mRingTonePlayer.release();
+    }
+
+    /////////////////////////////////////////////////////////////////
+    //Ringtone picker builder
+    /////////////////////////////////////////////////////////////////
+
+    /**
+     * This class takes every parameters of ringtone picker and initiate {@link RingtonePickerDialog}.
+     */
+    public static class Builder {
+        public static final int TYPE_RINGTONE = RingtoneManager.TYPE_RINGTONE;
+        public static final int TYPE_NOTIFICATION = RingtoneManager.TYPE_NOTIFICATION;
+        public static final int TYPE_ALARM = RingtoneManager.TYPE_ALARM;
+        public static final int TYPE_MUSIC = 3746;
+
+        private String mTitle = "Select ringtone";
+
+        private String mPositiveButtonText = "Ok";
+
+        private String mCancelButtonText = "Cancel";
+
+        private ArrayList<Integer> mRingtoneType = new ArrayList<>();
+
+        private boolean isPlaySample = false;
+
+        private String mCurrentRingtoneUri;
+
+        private RingtonePickerListener mListener;
+
+        private FragmentManager mFragmentManager;
+
+        public Builder(FragmentManager fragmentManager) {
+            mFragmentManager = fragmentManager;
+        }
+
+        /**
+         * Set the title of the ringtone picker dialog.
+         *
+         * @param title title string.
+         */
+        public Builder setTitle(@Nullable String title) {
+            mTitle = title;
+            return this;
+        }
+
+        public Builder setPositiveButtonText(@NonNull String positiveButtonText) {
+            //noinspection ConstantConditions
+            if (positiveButtonText == null)
+                throw new IllegalArgumentException("Positive button text cannot be null.");
+            mPositiveButtonText = positiveButtonText;
+            return this;
+        }
+
+        public Builder setCancelButtonText(@Nullable String cancelButtonText) {
+            mCancelButtonText = cancelButtonText;
+            return this;
+        }
+
+        public Builder addRingtoneType(@RingtoneTypes int ringtoneType) {
+            mRingtoneType.add(ringtoneType);
+            return this;
+        }
+
+        public Builder setPlaySampleWhileSelection(boolean playSample) {
+            isPlaySample = playSample;
+            return this;
+        }
+
+        public Builder setCurrentRingtoneUri(@Nullable Uri currentRingtoneUri) {
+            if (currentRingtoneUri != null) mCurrentRingtoneUri = currentRingtoneUri.toString();
+            return this;
+        }
+
+        public Builder setListener(@NonNull RingtonePickerListener listener) {
+            //noinspection ConstantConditions
+            if (listener == null)
+                throw new IllegalArgumentException("RingtonePickerListener cannot be null.");
+            mListener = listener;
+
+            return this;
+        }
+
+        public void show() {
+            if (mRingtoneType.size() == 0)
+                throw new IllegalArgumentException("Select at least one ringtone.");
+
+            RingtonePickerDialog.launchRingtonePicker(mFragmentManager, mTitle,
+                    mPositiveButtonText,
+                    mCancelButtonText,
+                    mRingtoneType,
+                    mCurrentRingtoneUri,
+                    mListener,
+                    isPlaySample);
+
+        }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({Builder.TYPE_RINGTONE,
+            Builder.TYPE_ALARM,
+            Builder.TYPE_MUSIC,
+            Builder.TYPE_NOTIFICATION})
+    @interface RingtoneTypes {
     }
 }

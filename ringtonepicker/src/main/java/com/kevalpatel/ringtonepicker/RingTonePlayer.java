@@ -9,10 +9,11 @@ import java.io.IOException;
 
 /**
  * Created by Keval on 29-Mar-17.
+ * This class plays the ringtone for the sample whenever user selects any from the list.
+ *
+ * @author {@link 'https://github.com/kevalpatel2106'}
  */
-
 class RingTonePlayer {
-
     private Context mContext;
     private MediaPlayer mMediaPlayer;
 
@@ -21,21 +22,30 @@ class RingTonePlayer {
         mMediaPlayer = new MediaPlayer();
     }
 
-    void playRingtone(@NonNull Uri uri) {
-        try {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.stop();
-                mMediaPlayer.reset();
-            }
+    /**
+     * Play the ringtone for the given uri.
+     *
+     * @param uri uri of the ringtone to play.
+     * @throws IOException if it cannot play the ringtone.
+     */
+    void playRingtone(@NonNull Uri uri) throws IOException,
+            IllegalArgumentException,
+            SecurityException,
+            IllegalStateException {
 
-            mMediaPlayer.setDataSource(mContext, uri);
-            mMediaPlayer.prepare();
-            mMediaPlayer.start();
-        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-            e.printStackTrace();
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+            mMediaPlayer.reset();
         }
+
+        mMediaPlayer.setDataSource(mContext, uri);
+        mMediaPlayer.prepare();
+        mMediaPlayer.start();
     }
 
+    /**
+     * Release the {@link MediaPlayer} instance. Remember to call this method in on destroy.
+     */
     void release() {
         if (mMediaPlayer.isPlaying()) mMediaPlayer.stop();
         mMediaPlayer.release();
