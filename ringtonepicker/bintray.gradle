@@ -7,17 +7,17 @@ if (project.rootProject.file('local.properties').exists()) {
     def siteUrl = 'https://github.com/kevalpatel2106/android-ringtone-picker'        // Homepage URL of the library
     def gitUrl = 'https://github.com/kevalpatel2106/android-ringtone-picker.git'      // Git repository URL
 
-    group = "com.kevalpatel2106"
+    group = "com.kevalpatel2106"    //Group id
 
     install {
+
         repositories.mavenInstaller {
-            // This generates POM.xml with proper parameters
             pom {
                 project {
-                    packaging 'aar'
+                    packaging 'aar' //AAR format
 
                     // Add your description here
-                    name 'Android Ringtone Picker'
+                    name 'Android Ringtone Picker'  //Name of the repo
                     description = 'Simple Ringtone Picker dialog which allows you to pick different sounds from ringtone, alarm tone, notification tone and music from external storage.'
                     url siteUrl
 
@@ -30,9 +30,9 @@ if (project.rootProject.file('local.properties').exists()) {
                     }
                     developers {
                         developer {
-                            id 'kevalpatel2106'
-                            name 'Keval Patel'
-                            email 'kevalpatel2106@gmail.com'
+                            id 'kevalpatel2106'     //Dev id
+                            name 'Keval Patel'      //Dev name
+                            email 'kevalpatel2106@gmail.com'    //Dev email
                         }
                     }
                     scm {
@@ -59,8 +59,8 @@ if (project.rootProject.file('local.properties').exists()) {
         classifier = 'javadoc'
         from javadoc.destinationDir
     }
+
     artifacts {
-        //    archives javadocJar
         archives sourcesJar
     }
 
@@ -73,18 +73,20 @@ if (project.rootProject.file('local.properties').exists()) {
         key = properties.getProperty("bintray.apikey")
 
         configurations = ['archives']
+
         pkg {
             repo = "maven"
+
             // it is the name that appears in bintray when logged
-            name = "android-ringtone-picker"
+            name = "android-ringtone-picker"    //Name of the artifact [Group Id]:[name]:[version]
             websiteUrl = siteUrl
             vcsUrl = gitUrl
             licenses = ["Apache-2.0"]
             publish = true
             version {
                 gpg {
-                    sign = false //Determines whether to GPG sign the files. The default is false
-                    //                passphrase = properties.getProperty("bintray.gpg.password") //Optional. The passphrase for GPG signing'
+                    sign = false                                                    //Determines whether to GPG sign the files. The default is false
+                    //passphrase = properties.getProperty("bintray.gpg.password")   //Optional. The passphrase for GPG signing'
                 }
             }
         }

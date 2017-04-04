@@ -4,6 +4,11 @@ android {
     buildToolsVersion "25.0.2"
     compileSdkVersion 25
 
+    // This is important, it will run lint checks but won't abort build
+    lintOptions {
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "com.ringtonepicker.sample"
 

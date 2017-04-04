@@ -13,13 +13,7 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-
         consumerProguardFiles 'proguard-rules.pro'
-    }
-    buildTypes {
-        release {
-            debuggable false
-        }
     }
 }
 
