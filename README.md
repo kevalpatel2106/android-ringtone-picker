@@ -3,6 +3,9 @@
 
 #### Simple Ringtone Picker dialog which allows you to pick different sounds from ringtone, alarm tone, notification tone and music from external storage.
 
+## Demo
+- You can download the sample apk from [here](/app/sample.apk).
+
 ## Contribute:
 - Still there are many open weather apis to implement. Any pull request are most welcome.
 **Simple 3 step to contribute into this repo:**
