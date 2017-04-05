@@ -63,7 +63,7 @@ ringtonePickerBuilder.show();
 3. Generate pull request. Mention all the required description regarding changes you made.
 
 ## Questions:
-If you have any questions, hit me on twitter [@kevalpatel2106](https://twitter.com/kevalpatel2106) .
+Hit me on twitter [![Twitter](https://img.shields.io/badge/Twitter-@kevalpatel2106-blue.svg?style=flat)](https://twitter.com/kevalpatel2106)
 
 ## License
 Copyright 2017 Keval Patel
