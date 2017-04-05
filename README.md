@@ -56,7 +56,7 @@ ringtonePickerBuilder.show();
 - You can download the sample apk from [here](/app/sample.apk).
 
 ## Contribute:
-- Still there are many open weather apis to implement. Any pull request are most welcome.
+- Any pull request are most welcome.
 **Simple 3 step to contribute into this repo:**
 1. Fork the project.
 2. Make required changes and commit.
