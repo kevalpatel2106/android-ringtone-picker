@@ -14,7 +14,7 @@
 3. Generate pull request. Mention all the required description regarding changes you made.
 
 ## Questions:
-If you have any questions, hit me on twitter [@kevalonly77](https://twitter.com/Kevalonly77) .
+If you have any questions, hit me on twitter [@kevalpatel2106](https://twitter.com/kevalpatel2106) .
 
 ## License
 Copyright 2017 Keval Patel
