@@ -1,4 +1,4 @@
-# android-ringtone-picker
+# Android Ringtone Picker
 [![Download](https://api.bintray.com/packages/kevalpatel2106/maven/android-ringtone-picker/images/download.svg) ](https://bintray.com/kevalpatel2106/maven/android-ringtone-picker/_latestVersion) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Ringtone%20Picker-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/5513)
 
 #### Simple Ringtone Picker dialog which allows you to pick different sounds from ringtone, alarm tone, notification tone and music from external storage.
