@@ -14,7 +14,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     compileSdkVersion 25
 
     // This is important, it will run lint checks but won't abort build
@@ -41,6 +41,5 @@ android {
 
 dependencies {
     compile project(':ringtonepicker')
-
     compile 'com.android.support:appcompat-v7:25.3.1'
 }
