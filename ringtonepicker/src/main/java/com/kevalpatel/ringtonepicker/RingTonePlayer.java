@@ -48,8 +48,8 @@ class RingTonePlayer {
 
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
-            mMediaPlayer.reset();
         }
+        mMediaPlayer.reset();
 
         mMediaPlayer.setDataSource(mContext, uri);
         mMediaPlayer.prepare();
