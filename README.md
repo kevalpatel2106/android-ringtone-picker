@@ -6,7 +6,7 @@
 ## Gradle dependency: 
 - Add below dependency into your build.gradle file.
 
-```compile 'com.kevalpatel2106:ringtonepicker:1.0'```
+```compile 'com.kevalpatel2106:ringtonepicker:1.1'```
 
 ## How to use?
 - User `RingtonePicker.Builder` to build the ringtone picker dialog. 
