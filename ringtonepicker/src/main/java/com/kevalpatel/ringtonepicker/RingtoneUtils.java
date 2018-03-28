@@ -22,13 +22,15 @@ import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created by Keval on 20-Feb-17.
@@ -36,96 +38,113 @@ import java.util.HashMap;
  *
  * @author {@link 'https://github.com/kevalpatel2106'}
  */
-
-@SuppressWarnings("WeakerAccess")
 public final class RingtoneUtils {
+
     /**
-     * Load the list of all the ringtones registered using {@link RingtoneManager}. It will add title as the key and
-     * uri of the sound as value in given hashmap.
+     * Load the list of all the ringtone registered using {@link RingtoneManager}. It will add title
+     * as the key and uri of the sound as value in given {@link LinkedHashMap}.
      *
-     * @param context       instance of the caller.
-     * @param ringTonesList Hash map in which ringtone will be added.
+     * @param context instance of the caller.
+     * @return {@link LinkedHashMap} of the title-{@link Uri} pair of all the ringtone.
      */
-    static void getRingTone(Context context,
-                            @NonNull HashMap<String, Uri> ringTonesList) {
-        getTone(context, RingtoneManager.TYPE_RINGTONE, ringTonesList);
+    @NonNull
+    @CheckResult
+    static LinkedHashMap<String, Uri> getRingTone(@NonNull final Context context) {
+        return getTone(context, RingtoneManager.TYPE_RINGTONE);
     }
 
     /**
      * Load the list of all the notification tones registered using {@link RingtoneManager}. It will add title as the key and
-     * uri of the sound as value in given hashmap.
+     * uri of the sound as value in given {@link LinkedHashMap}.
      *
-     * @param ringTonesList Hash map in which notification tones will be added.
-     * @param context       instance of the caller.
+     * @param context instance of the caller.
+     * @return {@link LinkedHashMap} of the title-{@link Uri} pair of all the notification tone.
      */
-    static void getNotificationTones(Context context,
-                                     @NonNull HashMap<String, Uri> ringTonesList) {
-        getTone(context, RingtoneManager.TYPE_NOTIFICATION, ringTonesList);
+    @NonNull
+    @CheckResult
+    static LinkedHashMap<String, Uri> getNotificationTones(@NonNull final Context context) {
+        return getTone(context, RingtoneManager.TYPE_NOTIFICATION);
     }
 
     /**
-     * Load the list of all the alarm tones registered using {@link RingtoneManager}. It will add title as the key and
-     * uri of the sound as value in given hashmap.
+     * Load the list of all the alarm tones registered using {@link RingtoneManager}. It will add
+     * title as the key and uri of the sound as value in given {@link LinkedHashMap}.
      *
-     * @param ringTonesList Hash map in which alarm tone will be added.
-     * @param context       instance of the caller.
+     * @param context instance of the caller.
+     * @return {@link LinkedHashMap} of the title-{@link Uri} pair of all the alarm tone.
      */
-    static void getAlarmTones(Context context,
-                              @NonNull HashMap<String, Uri> ringTonesList) {
-        getTone(context, RingtoneManager.TYPE_ALARM, ringTonesList);
+    @NonNull
+    @CheckResult
+    static LinkedHashMap<String, Uri> getAlarmTones(@NonNull final Context context) {
+        return getTone(context, RingtoneManager.TYPE_ALARM);
     }
 
     /**
      * Get the tone from {@link RingtoneManager} for any given type. It will add title as the key and
-     * uri of the sound as value in given hashmap.
+     * uri of the sound as value in given {@link LinkedHashMap}.
      *
-     * @param context       instance of the caller
-     * @param type          type of the ringtone from {@link RingtonePickerDialog.Builder#TYPE_NOTIFICATION},
-     *                      {@link RingtonePickerDialog.Builder#TYPE_RINGTONE} or {@link RingtonePickerDialog.Builder#TYPE_ALARM}
-     * @param ringTonesList Hash map in which alarm tone will be added.
+     * @param context instance of the caller
+     * @param type    type of the ringtone from {@link RingtonePickerDialog.Builder#TYPE_NOTIFICATION},
+     *                {@link RingtonePickerDialog.Builder#TYPE_RINGTONE} or
+     *                {@link RingtonePickerDialog.Builder#TYPE_ALARM}.
+     * @return {@link LinkedHashMap} of the title-{@link Uri} pair of all the ringtone of given type.
      */
-    private static void getTone(Context context,
-                                int type,
-                                @NonNull HashMap<String, Uri> ringTonesList) {
-        RingtoneManager mRingtoneMgr = new RingtoneManager(context);
+    @CheckResult
+    @NonNull
+    private static LinkedHashMap<String, Uri> getTone(@NonNull final Context context, final int type) {
+        final LinkedHashMap<String, Uri> ringToneList = new LinkedHashMap<>();
 
-        mRingtoneMgr.setType(type);
-        Cursor ringsCursor = mRingtoneMgr.getCursor();
+        final RingtoneManager ringtoneManager = new RingtoneManager(context);
+        ringtoneManager.setType(type);
 
+        final Cursor ringsCursor = ringtoneManager.getCursor();
         while (ringsCursor.moveToNext()) {
-            ringTonesList.put(ringsCursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
+            ringToneList.put(ringsCursor.getString(RingtoneManager.TITLE_COLUMN_INDEX),
                     Uri.parse(ringsCursor.getString(RingtoneManager.URI_COLUMN_INDEX) + "/"
                             + ringsCursor.getString(RingtoneManager.ID_COLUMN_INDEX)));
         }
         ringsCursor.close();
+        return ringToneList;
     }
 
     /**
      * Get the list of the music (sound) files from the phone storage. It will add title as the key and
-     * uri of the sound as value in given hashmap.
+     * uri of the sound as value in given {@link LinkedHashMap}.
      *
-     * @param context       instance of the caller.
-     * @param ringTonesList Hash map in which alarm tone will be added.
+     * @param context instance of the caller.
+     * @return {@link LinkedHashMap} of the title-{@link Uri} pair of all the music tracks.
+     * @throws IllegalStateException If storage read permission is not available.
      */
+    @NonNull
+    @CheckResult
     @SuppressLint("InlinedApi")
-    @RequiresPermission(allOf = {Manifest.permission.READ_EXTERNAL_STORAGE})
-    static void getMusic(@NonNull Context context,
-                         @NonNull HashMap<String, Uri> ringTonesList) {
+    @RequiresPermission(anyOf = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    static LinkedHashMap<String, Uri> getMusic(@NonNull final Context context) {
+        final LinkedHashMap<String, Uri> ringToneList = new LinkedHashMap<>();
+
+        //Check for the read permission
+        if (!RingtoneUtils.checkForStorageReadPermission(context)) {
+            throw new IllegalStateException("Storage permission is not available.");
+        }
+
         //Prepare query
-        Cursor mediaCursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media._ID},
-                MediaStore.Audio.Media.IS_MUSIC + "!= 0",
-                null,
-                MediaStore.Audio.Media.TITLE + " ASC");
+        final Cursor mediaCursor = context.getContentResolver()
+                .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        new String[]{MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media._ID},
+                        MediaStore.Audio.Media.IS_MUSIC + "!= 0",
+                        null,
+                        MediaStore.Audio.Media.TITLE + " ASC");
 
         if (mediaCursor != null) {
             while (mediaCursor.moveToNext()) {
-                ringTonesList.put(mediaCursor.getString(mediaCursor.getColumnIndex(MediaStore.Audio.Media.TITLE)),
+                ringToneList.put(mediaCursor.getString(mediaCursor.getColumnIndex(MediaStore.Audio.Media.TITLE)),
                         Uri.parse(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI + "/"
                                 + mediaCursor.getString(mediaCursor.getColumnIndex(MediaStore.Audio.Media._ID))));
             }
             mediaCursor.close();
         }
+
+        return ringToneList;
     }
 
     /**
@@ -166,13 +185,12 @@ public final class RingtoneUtils {
      *
      * @param context instance of the caller
      * @param uri     uri of the tone to search
-     *
      * @return title of the tone or return null if no tone found.
      */
     @Nullable
-    public static String getRingtoneName(@NonNull Context context,
-                                         @NonNull Uri uri) {
-        Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
+    public static String getRingtoneName(@NonNull final Context context,
+                                         @NonNull final Uri uri) {
+        final Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
         if (ringtone != null) {
             return ringtone.getTitle(context);
         } else {
@@ -193,8 +211,16 @@ public final class RingtoneUtils {
         }
     }
 
+    /**
+     * Check if the {@link Manifest.permission#WRITE_EXTERNAL_STORAGE} permission is granted?
+     *
+     * @return True if the read permission granted or else false.
+     */
     static boolean checkForStorageReadPermission(@NonNull final Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return ActivityCompat.checkSelfPermission(context,
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN ?
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        : Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED;
     }
 }

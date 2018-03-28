@@ -24,6 +24,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kevalpatel.ringtonepicker.RingtonePickerDialog;
 import com.kevalpatel.ringtonepicker.RingtonePickerListener;
@@ -60,11 +61,25 @@ public class MainActivity extends AppCompatActivity {
         alarmCb.setOnClickListener(mCheckBoxClickListener);
 
         final SwitchCompat playRingtoneSwitch = findViewById(R.id.switch_play_ringtone);
+        final SwitchCompat defaultSwitch = findViewById(R.id.switch_default_ringtone);
+        final SwitchCompat silentSwitch = findViewById(R.id.switch_silent_ringtone);
+
         final TextView ringtoneTv = findViewById(R.id.tv_ringtone_info);
 
         findViewById(R.id.btn_pick_ringtone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Validate if at least one ringtone type is selected.
+                if (!musicCb.isChecked()
+                        && !notificationCb.isChecked()
+                        && alarmCb.isChecked()
+                        && musicCb.isChecked()) {
+
+                    Toast.makeText(MainActivity.this, R.string.error_no_ringtone_type,
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 //Application needs read storage permission for Builder.TYPE_MUSIC .
                 if (ActivityCompat.checkSelfPermission(MainActivity.this,
@@ -72,11 +87,42 @@ public class MainActivity extends AppCompatActivity {
                         == PackageManager.PERMISSION_GRANTED) {
 
                     RingtonePickerDialog.Builder ringtonePickerBuilder = new RingtonePickerDialog
-                            .Builder(MainActivity.this, getSupportFragmentManager());
+                            .Builder(MainActivity.this, getSupportFragmentManager())
 
-                    //Set title of the dialog.
-                    //If set null, no title will be displayed.
-                    ringtonePickerBuilder.setTitle("Select ringtone");
+                            //Set title of the dialog.
+                            //If set null, no title will be displayed.
+                            .setTitle("Select ringtone")
+
+                            //set the currently selected uri, to mark that ringtone as checked by default.
+                            //If no ringtone is currently selected, pass null.
+                            .setCurrentRingtoneUri(mCurrentSelectedUri)
+
+                            //Allow user to select default ringtone set in phone settings.
+                            .displayDefaultRingtone(defaultSwitch.isChecked())
+
+                            //Allow user to select silent (i.e. No ringtone.).
+                            .displaySilentRingtone(silentSwitch.isChecked())
+
+                            //set the text to display of the positive (ok) button.
+                            //If not set OK will be the default text.
+                            .setPositiveButtonText("SET RINGTONE")
+
+                            //set text to display as negative button.
+                            //If set null, negative button will not be displayed.
+                            .setCancelButtonText("CANCEL")
+
+                            //Set flag true if you want to play the sample of the clicked tone.
+                            .setPlaySampleWhileSelection(playRingtoneSwitch.isChecked())
+
+                            //Set the callback listener.
+                            .setListener(new RingtonePickerListener() {
+                                @Override
+                                public void OnRingtoneSelected(@NonNull String ringtoneName, Uri ringtoneUri) {
+                                    mCurrentSelectedUri = ringtoneUri;
+                                    ringtoneTv.setText(String.format("Name : %s\nUri : %s", ringtoneName, ringtoneUri));
+                                }
+                            });
+
 
                     //Add the desirable ringtone types.
                     if (musicCb.isChecked())
@@ -88,36 +134,11 @@ public class MainActivity extends AppCompatActivity {
                     if (alarmCb.isChecked())
                         ringtonePickerBuilder.addRingtoneType(RingtonePickerDialog.Builder.TYPE_ALARM);
 
-                    //set the text to display of the positive (ok) button.
-                    //If not set OK will be the default text.
-                    ringtonePickerBuilder.setPositiveButtonText("SET RINGTONE");
-
-                    //set text to display as negative button.
-                    //If set null, negative button will not be displayed.
-                    ringtonePickerBuilder.setCancelButtonText("CANCEL");
-
-                    //Set flag true if you want to play the com.ringtonepicker.sample of the clicked tone.
-                    ringtonePickerBuilder.setPlaySampleWhileSelection(playRingtoneSwitch.isChecked());
-
-                    //Set the callback listener.
-                    ringtonePickerBuilder.setListener(new RingtonePickerListener() {
-                        @Override
-                        public void OnRingtoneSelected(@NonNull String ringtoneName, Uri ringtoneUri) {
-                            mCurrentSelectedUri = ringtoneUri;
-                            ringtoneTv.setText("Name : " + ringtoneName + "\nUri : " + ringtoneUri);
-                        }
-                    });
-
-                    //set the currently selected uri, to mark that ringtone as checked by default.
-                    //If no ringtone is currently selected, pass null.
-                    ringtonePickerBuilder.setCurrentRingtoneUri(mCurrentSelectedUri);
-
                     //Display the dialog.
                     ringtonePickerBuilder.show();
                 } else {
-
                     ActivityCompat.requestPermissions(MainActivity.this,
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                             123);
                 }
             }

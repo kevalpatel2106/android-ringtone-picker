@@ -66,20 +66,39 @@
 
     <TextView
         android:id="@+id/tv_hearing_1"
-        style="@style/Base.TextAppearance.AppCompat.Large"
+        style="@style/Base.TextAppearance.AppCompat.Body2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/cb_ringtone"
         android:text="Ringtone types: "/>
 
     <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_default_ringtone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_hearing_1"
+        android:layout_marginBottom="8dp"
+        android:checked="true"
+        android:text="Add default ringtone"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_silent_ringtone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/switch_default_ringtone"
+        android:checked="true"
+        android:text="Add silent"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
+
+
+    <android.support.v7.widget.SwitchCompat
         android:id="@+id/switch_play_ringtone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:layout_marginBottom="20dp"
-        android:layout_above="@id/tv_hearing_1"
-        android:text="Play ringtone"/>
+        android:layout_above="@id/switch_silent_ringtone"
+        android:text="Play ringtone"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
 
     <TextView
         android:id="@+id/tv_ringtone_info"

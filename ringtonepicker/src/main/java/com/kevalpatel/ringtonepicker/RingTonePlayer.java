@@ -17,24 +17,33 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 /**
  * Created by Keval on 29-Mar-17.
- * This class plays the ringtone for the com.ringtonepicker.sample whenever user selects any from the list.
+ * This class plays the ringtone sample whenever user selects any ringtone from the list.
  *
  * @author {@link 'https://github.com/kevalpatel2106'}
  */
-class RingTonePlayer {
-    private Context mContext;
+final class RingTonePlayer implements Closeable {
+
+    @NonNull
+    private final Context mContext;
 
     /**
      * Media player for the ringtone.
      */
-    private MediaPlayer mMediaPlayer;
+    @NonNull
+    private final MediaPlayer mMediaPlayer;
 
-    RingTonePlayer(Context context) {
+    /**
+     * Public constructor.
+     */
+    RingTonePlayer(@NonNull final Context context) {
         mContext = context;
         mMediaPlayer = new MediaPlayer();
     }
@@ -45,7 +54,7 @@ class RingTonePlayer {
      * @param uri uri of the ringtone to play.
      * @throws IOException if it cannot play the ringtone.
      */
-    void playRingtone(@NonNull Uri uri) throws IOException,
+    void playRingtone(@Nullable final Uri uri) throws IOException,
             IllegalArgumentException,
             SecurityException,
             IllegalStateException {
@@ -55,6 +64,11 @@ class RingTonePlayer {
         }
         mMediaPlayer.reset();
 
+        if (uri == null || uri == Uri.EMPTY) {
+            Log.w(RingTonePlayer.class.getName(), "playRingtone: Uri is null or empty.");
+            return;
+        }
+
         mMediaPlayer.setDataSource(mContext, uri);
         mMediaPlayer.prepare();
         mMediaPlayer.start();
@@ -63,7 +77,8 @@ class RingTonePlayer {
     /**
      * Release the {@link MediaPlayer} instance. Remember to call this method in on destroy.
      */
-    void release() {
+    @Override
+    public void close() {
         if (mMediaPlayer.isPlaying()) mMediaPlayer.stop();
         mMediaPlayer.release();
     }

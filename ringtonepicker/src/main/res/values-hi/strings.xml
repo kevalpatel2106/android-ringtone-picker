@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright 2017 Keval Patel
   ~
@@ -12,6 +13,6 @@
   -->
 
 <resources>
-    <string name="app_name">RingtonePicker</string>
-    <string name="error_no_ringtone_type">Select atleast one ringtone type.</string>
+    <string name="ringtone_picker_default_title">रिंगटोन चुनें</string>
+    <string name="title_silent_list_item">Silencieux</string>
 </resources>
