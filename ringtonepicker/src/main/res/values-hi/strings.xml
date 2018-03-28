@@ -14,5 +14,4 @@
 
 <resources>
     <string name="ringtone_picker_default_title">रिंगटोन चुनें</string>
-    <string name="title_silent_list_item">Silencieux</string>
 </resources>
