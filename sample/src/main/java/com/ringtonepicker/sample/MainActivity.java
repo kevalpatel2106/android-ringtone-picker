@@ -17,6 +17,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -46,20 +47,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final CheckedTextView musicCb = (CheckedTextView) findViewById(R.id.cb_music);
+        final CheckedTextView musicCb = findViewById(R.id.cb_music);
         musicCb.setOnClickListener(mCheckBoxClickListener);
 
-        final CheckedTextView notificationCb = (CheckedTextView) findViewById(R.id.cb_notification);
+        final CheckedTextView notificationCb = findViewById(R.id.cb_notification);
         notificationCb.setOnClickListener(mCheckBoxClickListener);
 
-        final CheckedTextView ringtoneCb = (CheckedTextView) findViewById(R.id.cb_ringtone);
+        final CheckedTextView ringtoneCb = findViewById(R.id.cb_ringtone);
         ringtoneCb.setOnClickListener(mCheckBoxClickListener);
 
-        final CheckedTextView alarmCb = (CheckedTextView) findViewById(R.id.cb_alarm);
+        final CheckedTextView alarmCb = findViewById(R.id.cb_alarm);
         alarmCb.setOnClickListener(mCheckBoxClickListener);
 
-        final SwitchCompat playRingtoneSwitch = (SwitchCompat) findViewById(R.id.switch_play_ringtone);
-        final TextView ringtoneTv = (TextView) findViewById(R.id.tv_ringtone_info);
+        final SwitchCompat playRingtoneSwitch = findViewById(R.id.switch_play_ringtone);
+        final TextView ringtoneTv = findViewById(R.id.tv_ringtone_info);
 
         findViewById(R.id.btn_pick_ringtone).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     //Set the callback listener.
                     ringtonePickerBuilder.setListener(new RingtonePickerListener() {
                         @Override
-                        public void OnRingtoneSelected(String ringtoneName, Uri ringtoneUri) {
+                        public void OnRingtoneSelected(@NonNull String ringtoneName, Uri ringtoneUri) {
                             mCurrentSelectedUri = ringtoneUri;
                             ringtoneTv.setText("Name : " + ringtoneName + "\nUri : " + ringtoneUri);
                         }
