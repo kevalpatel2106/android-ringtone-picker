@@ -17,6 +17,7 @@ package com.kevalpatel.ringtonepicker;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -25,6 +26,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.support.v4.app.ActivityCompat;
 
 import java.util.HashMap;
 
@@ -164,6 +166,7 @@ public final class RingtoneUtils {
      *
      * @param context instance of the caller
      * @param uri     uri of the tone to search
+     *
      * @return title of the tone or return null if no tone found.
      */
     @Nullable
@@ -188,6 +191,11 @@ public final class RingtoneUtils {
             }
             return title;
         }
+    }
+
+    static boolean checkForStorageReadPermission(@NonNull final Context context) {
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED;
     }
 }
 

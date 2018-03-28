@@ -11,4 +11,8 @@
   ~  the specific language governing permissions and limitations under the License.
   -->
 
-<manifest package="com.kevalpatel.ringtonepicker"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kevalpatel.ringtonepicker">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+</manifest>
