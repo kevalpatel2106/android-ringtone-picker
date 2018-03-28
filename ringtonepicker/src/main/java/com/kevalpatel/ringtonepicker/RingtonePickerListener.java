@@ -14,13 +14,25 @@
 package com.kevalpatel.ringtonepicker;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.Serializable;
 
 /**
  * Created by Keval on 29-Mar-17.
+ * <p>
+ * A listener to notify the class whenever new ringtone is selected from ringtone picker.
  */
 
 public interface RingtonePickerListener extends Serializable {
-    void OnRingtoneSelected(String ringtoneName, Uri ringtoneUri);
+
+    /**
+     * This callback will invoke whenever the ringtone is selected in the ringtone picker.
+     *
+     * @param ringtoneName Name of the selected ringtone.
+     * @param ringtoneUri  {@link Uri} of the selected ringtone. This may be null if the user selects
+     *                     default or silent ringtone option.
+     */
+    void OnRingtoneSelected(@NonNull String ringtoneName, @Nullable Uri ringtoneUri);
 }

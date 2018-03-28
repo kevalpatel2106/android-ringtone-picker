@@ -71,13 +71,13 @@ public final class RingtonePickerDialog extends DialogFragment {
     }
 
     private static void launchRingtonePicker(@NonNull FragmentManager fragmentManager,
-                                     @Nullable String title,
-                                     @NonNull String positiveButtonText,
-                                     @Nullable String negativeButtonText,
-                                     @NonNull ArrayList<Integer> ringtoneTypes,
-                                     @Nullable String currentUri,
-                                     @NonNull RingtonePickerListener listener,
-                                     boolean isPlaySample) {
+                                             @Nullable String title,
+                                             @NonNull String positiveButtonText,
+                                             @Nullable String negativeButtonText,
+                                             @NonNull ArrayList<Integer> ringtoneTypes,
+                                             @Nullable String currentUri,
+                                             @NonNull RingtonePickerListener listener,
+                                             boolean isPlaySample) {
         Bundle bundle = new Bundle();
         bundle.putString(ARG_DIALOG_TITLE, title);
         bundle.putString(ARG_DIALOG_POSITIVE, positiveButtonText);
@@ -201,6 +201,7 @@ public final class RingtonePickerDialog extends DialogFragment {
      * Get the position of the ringtone in {@link #mRingTones} based on the uri.
      *
      * @param uri Uri of the ringtone to find.
+     *
      * @return position of the uri in {@link #mRingTones} hash map.
      */
     private int getUriPosition(@NonNull Uri uri) {
@@ -250,11 +251,16 @@ public final class RingtonePickerDialog extends DialogFragment {
          */
         public static final int TYPE_MUSIC = 3746;
 
-        private String mTitle = "Select ringtone";
+        /**
+         * The title of the ringtone picker dialog. This value can be set from {@link #setTitle(String)}.
+         *
+         * @see #setTitle(String)
+         */
+        private String mTitle;
 
-        private String mPositiveButtonText = "Ok";
+        private String mPositiveButtonText;
 
-        private String mCancelButtonText = "Cancel";
+        private String mCancelButtonText;
 
         private ArrayList<Integer> mRingtoneType = new ArrayList<>();
 
@@ -268,10 +274,21 @@ public final class RingtonePickerDialog extends DialogFragment {
 
         private FragmentManager mFragmentManager;
 
+        /**
+         * Create a {@link Builder} for the {@link RingtonePickerDialog}.
+         *
+         * @param context         Instance of the caller.
+         * @param fragmentManager Support {@link FragmentManager}.
+         */
         public Builder(@NonNull Context context,
                        @NonNull FragmentManager fragmentManager) {
             mContext = context;
             mFragmentManager = fragmentManager;
+
+            //Set default values
+            mTitle = mContext.getString(R.string.ringtone_picker_default_title);
+            mPositiveButtonText = mContext.getString(android.R.string.ok);
+            mCancelButtonText = mContext.getString(android.R.string.cancel);
         }
 
         /**
@@ -288,6 +305,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          * Set the text to display on positive button.
          *
          * @param positiveButtonText text to display.
+         *
          * @return {@link Builder}
          */
         public Builder setPositiveButtonText(@NonNull String positiveButtonText) {
@@ -302,6 +320,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          * Set the text to display on positive button.
          *
          * @param positiveButtonText text to display.
+         *
          * @return {@link Builder}
          */
         public Builder setPositiveButtonText(@StringRes int positiveButtonText) {
@@ -311,7 +330,9 @@ public final class RingtonePickerDialog extends DialogFragment {
         /**
          * Set the text to display on negative/cancel button.
          *
-         * @param cancelButtonText text to display on the button or null if you don't want to display the cancel button.
+         * @param cancelButtonText text to display on the button or null if you don't want to display
+         *                         the cancel button.
+         *
          * @return {@link Builder}
          */
         public Builder setCancelButtonText(@Nullable String cancelButtonText) {
@@ -323,6 +344,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          * Set the text to display on negative/cancel button.
          *
          * @param cancelButtonText text to display on the button or null if you don't want to display the cancel button.
+         *
          * @return {@link Builder}
          */
         public Builder setCancelButtonText(@StringRes int cancelButtonText) {
@@ -333,6 +355,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          * Add the ringtone type to display in the ringtone selection list.
          *
          * @param ringtoneType type of the ringtone.
+         *
          * @return {@link Builder}
          */
         public Builder addRingtoneType(@RingtoneTypes int ringtoneType) {
@@ -350,6 +373,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          * or not?
          *
          * @param playSample if true, selected ringtone will play for one time.
+         *
          * @return {@link Builder}
          */
         public Builder setPlaySampleWhileSelection(boolean playSample) {
@@ -362,6 +386,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          * in the ringtone list, no ringtone will displayed as selected by default.
          *
          * @param currentRingtoneUri Uri of the ringtone.
+         *
          * @return {@link Builder}
          */
         public Builder setCurrentRingtoneUri(@Nullable Uri currentRingtoneUri) {
@@ -373,6 +398,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          * Set the call back listener.
          *
          * @param listener {@link RingtonePickerListener}.
+         *
          * @return {@link Builder}
          */
         public Builder setListener(@NonNull RingtonePickerListener listener) {

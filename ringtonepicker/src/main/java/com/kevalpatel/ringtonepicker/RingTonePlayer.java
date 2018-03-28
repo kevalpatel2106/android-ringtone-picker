@@ -28,6 +28,10 @@ import java.io.IOException;
  */
 class RingTonePlayer {
     private Context mContext;
+
+    /**
+     * Media player for the ringtone.
+     */
     private MediaPlayer mMediaPlayer;
 
     RingTonePlayer(Context context) {
