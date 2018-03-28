@@ -2,10 +2,6 @@ language: android
 jdk: oraclejdk8
 sudo: false
 
-notifications:
-    email:
-        - kevalpatel2106@gmail.com
-
 env:
     global:
         - ADB_INSTALL_TIMEOUT=10    #Time out to 10 mins
@@ -24,15 +20,12 @@ android:
     components:
         - platform-tools
         - tools
-        - build-tools-25.0.3
-        - android-25
+        - build-tools-27.0.3
+        - android-27
 
         # Additional components
         - extra-google-m2repository
         - extra-android-m2repository
-
-        #system images
-        - sys-img-armeabi-v7a-android-22
   
 licenses:
     - 'android-sdk-preview-license-52d11cd2'
@@ -41,14 +34,6 @@ licenses:
     
 before_script:
     - chmod +x gradlew      #Grand permissions
-    - android list targets
-    #- echo no | android create avd --force --name test --target android-21 --abi armeabi-v7a    #Create AVD for API 21
-    #- emulator -avd test -no-skin -no-audio -no-window &    #Start emulator
 
 script:
-    - echo "Travis branch is $TRAVIS_BRANCH"
-    - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
-    #- android-wait-for-emulator
-    - adb devices   #Display list of devices
-    - adb shell input keyevent 82 &
     - ./gradlew assembleDebug -PdisablePreDex --stacktrace
