@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.ViewFlipper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +51,7 @@ import java.util.LinkedHashMap;
  * @see Builder
  */
 
-public final class RingtonePickerDialog extends DialogFragment {
+public final class RingtonePickerDialog extends DialogFragment implements RingtoneLoaderTask.LoadCompleteListener {
 
     // Argument names.
     private static final String ARG_DIALOG_TITLE = "arg_dialog_title";
@@ -84,16 +91,31 @@ public final class RingtonePickerDialog extends DialogFragment {
      */
     private boolean isPlaySample;
 
+    private boolean isDisplayDefault;
+
+    private boolean isDisplaySilent;
+
     /**
      * Key-value {@link Pair} of the selected ringtone name and {@link Uri}.
      */
     @NonNull
     private Pair<String, Uri> mCurrentRingTone = new Pair<>(null, Uri.EMPTY);
 
+    private ArrayList<Integer> mRingtoneTypes;
+
+    /**
+     * {@link RingtoneLoaderTask} to load the list of ringtone on background.
+     */
+    @Nullable
+    private RingtoneLoaderTask mLoaderTask;
+
     //Dialog building parameters.
     private String mDialogTitle;
     private String mPositiveButtonTitle;
     private String mNegativeButtonTitle;
+
+    private ListView mListView;
+    private ViewFlipper mViewFlipper;
 
     /**
      * Public constructor.
@@ -198,13 +220,11 @@ public final class RingtonePickerDialog extends DialogFragment {
 
         //Should play sample sound?
         isPlaySample = getArguments().getBoolean(ARG_IS_PLAY, false);
+        isDisplayDefault = getArguments().getBoolean(ARG_IS_DISPLAY_DEFAULT, false);
+        isDisplaySilent = getArguments().getBoolean(ARG_IS_DISPLAY_SILENT, false);
 
         //Parse ringtone types.
-        prepareRingtoneList(
-                getArguments().getIntegerArrayList(ARG_RINGTONE_TYPES),
-                getArguments().getBoolean(ARG_IS_DISPLAY_DEFAULT, false),
-                getArguments().getBoolean(ARG_IS_DISPLAY_SILENT, false)
-        );
+        mRingtoneTypes = getArguments().getIntegerArrayList(ARG_RINGTONE_TYPES);
 
         //Initialize media player
         mRingTonePlayer = new RingTonePlayer(mContext);
@@ -214,19 +234,15 @@ public final class RingtonePickerDialog extends DialogFragment {
      * Prepare the {@link LinkedHashMap} of the items to display in the list. This will prepare
      * {@link LinkedHashMap} with title of the ringtone as the key and {@link Uri} as the value.
      * <p>
-     * - If <code>displayDefault</code> is true the first item of the list will have title "Default"
+     * - If {@link #isDisplayDefault} is true the first item of the list will have title "Default"
      * and value will be system ringtone {@link Uri}.
-     * - If <code>displaySilent</code> is true the second item of the list will have title "Silent"
+     * - If  {@link #isDisplaySilent} is true the second item of the list will have title "Silent"
      * and value will be null.
      *
-     * @param types          List {@link RingtoneTypes} to add.
-     * @param displayDefault True if to add "Default" at top of the list.
-     * @param displaySilent  True if to add "Silent" at top of the list.
+     * @param types List {@link RingtoneTypes} to add.
      */
     @SuppressLint("MissingPermission")
-    private void prepareRingtoneList(final ArrayList<Integer> types,
-                                     final boolean displayDefault,
-                                     final boolean displaySilent) {
+    private void prepareRingtoneList(final ArrayList<Integer> types) {
         if (types == null || types.isEmpty()) {
             throw new IllegalArgumentException("At least one ringtone type must be added.");
         }
@@ -234,33 +250,18 @@ public final class RingtonePickerDialog extends DialogFragment {
         mRingTones = new LinkedHashMap<>();
 
         //Add default item first
-        if (displayDefault) {
+        if (isDisplayDefault) {
             mRingTones.put(getString(R.string.title_default_list_item), RingtoneUtils.getSystemRingtoneTone());
         }
 
         //Add silent item first
-        if (displaySilent) {
+        if (isDisplaySilent) {
             mRingTones.put(getString(R.string.title_silent_list_item), null /* No ringtone */);
         }
 
-        for (int type : types) {
-            switch (type) {
-                case Builder.TYPE_RINGTONE:
-                    mRingTones.putAll(RingtoneUtils.getRingTone(mContext));
-                    break;
-                case Builder.TYPE_ALARM:
-                    mRingTones.putAll(RingtoneUtils.getAlarmTones(mContext));
-                    break;
-                case Builder.TYPE_MUSIC:
-                    mRingTones.putAll(RingtoneUtils.getMusic(mContext));
-                    break;
-                case Builder.TYPE_NOTIFICATION:
-                    mRingTones.putAll(RingtoneUtils.getNotificationTones(mContext));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid ringtone type.");
-            }
-        }
+        mLoaderTask = new RingtoneLoaderTask(mContext.getApplicationContext(), this);
+        //noinspection unchecked
+        mLoaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, types);
     }
 
     @NonNull
@@ -269,33 +270,44 @@ public final class RingtonePickerDialog extends DialogFragment {
         //Find the current selected item
         int currentSelectionPos = getUriPosition(mRingTones, mCurrentRingTone.second);
 
-        final String[] itemTitles = mRingTones.keySet().toArray(new String[mRingTones.size()]);
+        @SuppressLint("InflateParams")
+        View customView = LayoutInflater.from(getContext()).inflate(R.layout.layout_ringtone_dialog, null);
+
+        //Set list
+        mListView = customView.findViewById(R.id.ringtone_list);
+        mListView.setSelection(currentSelectionPos);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final String currentToneTitle = (String) mListView.getAdapter().getItem(position);
+                mCurrentRingTone = new Pair<>(
+                        currentToneTitle,
+                        mRingTones.get(currentToneTitle)
+                );
+
+                //Play the tone
+                if (isPlaySample) {
+                    try {
+                        mRingTonePlayer.playRingtone(mCurrentRingTone.second);
+                    } catch (IOException e) {
+                        //Cannot play ringtone
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        mViewFlipper = customView.findViewById(R.id.view_flipper);
+        mViewFlipper.setDisplayedChild(0);
+
+        //Load the ringtone
+        prepareRingtoneList(mRingtoneTypes);
 
         //Prepare the dialog
         return new AlertDialog.Builder(mContext)
                 .setTitle(mDialogTitle)
-                .setSingleChoiceItems(itemTitles,   /* Name of all the ringtone */
-                        currentSelectionPos,        /* Preselected item */
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final String currentToneTitle = itemTitles[which];
-                                mCurrentRingTone = new Pair<>(
-                                        currentToneTitle,
-                                        mRingTones.get(currentToneTitle)
-                                );
-
-                                //Play the tone
-                                if (isPlaySample) {
-                                    try {
-                                        mRingTonePlayer.playRingtone(mCurrentRingTone.second);
-                                    } catch (IOException e) {
-                                        //Cannot play ringtone
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        })
+                .setView(customView)
                 .setPositiveButton(mPositiveButtonTitle, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -330,9 +342,21 @@ public final class RingtonePickerDialog extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mLoaderTask != null && !mLoaderTask.isCancelled()) mLoaderTask.cancel(true);
 
         //Release media player
         mRingTonePlayer.close();
+    }
+
+    @Override
+    public void onLoadComplete(@NonNull HashMap<String, Uri> ringtone) {
+        mViewFlipper.setDisplayedChild(1);
+        mRingTones.putAll(ringtone);
+
+        final String[] itemTitles = mRingTones.keySet().toArray(new String[mRingTones.size()]);
+        mListView.setAdapter(new ArrayAdapter<>(mContext,
+                android.R.layout.select_dialog_singlechoice,
+                itemTitles));
     }
 
     /**
@@ -544,7 +568,7 @@ public final class RingtonePickerDialog extends DialogFragment {
          *                               permission not granted and ringtoneType is {@link #TYPE_MUSIC}.
          */
         public Builder addRingtoneType(@RingtoneTypes final int ringtoneType) {
-            if (ringtoneType == TYPE_MUSIC && RingtoneUtils.checkForStorageReadPermission(mContext)) {
+            if (ringtoneType == TYPE_MUSIC && !RingtoneUtils.checkForStorageReadPermission(mContext)) {
                 throw new IllegalStateException("android.permission.READ_EXTERNAL_STORAGE is required for TYPE_MUSIC.");
             } else {
                 mRingtoneType.add(ringtoneType);

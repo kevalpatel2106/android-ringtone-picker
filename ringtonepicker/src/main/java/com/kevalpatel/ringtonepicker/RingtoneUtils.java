@@ -22,7 +22,6 @@ import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -217,11 +216,8 @@ public final class RingtoneUtils {
      * @return True if the read permission granted or else false.
      */
     static boolean checkForStorageReadPermission(@NonNull final Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN ?
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        : Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED;
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED;
     }
 }
 
