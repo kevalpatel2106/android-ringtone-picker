@@ -357,7 +357,7 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
         int currentSelectionPos = getUriPosition(mRingTones, mCurrentRingTone.second);
 
         mListView.setAdapter(new ArrayAdapter<>(mContext,
-                android.R.layout.simple_list_item_single_choice,
+                android.R.layout.select_dialog_singlechoice,
                 itemTitles));
         mListView.setSelection(currentSelectionPos);
         mListView.setItemChecked(currentSelectionPos, true);
