@@ -77,7 +77,8 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
     /**
      * {@link java.util.Map} of all the ringtone names and {@link Uri} to display in the dialog.
      */
-    private LinkedHashMap<String, Uri> mRingTones;
+    private LinkedHashMap<String, Uri> mRingTones = new LinkedHashMap<>();
+    ;
 
     /**
      * {@link RingTonePlayer} to play sample of the ringtone if {@link #isPlaySample} is true.
@@ -268,14 +269,13 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //Find the current selected item
-        int currentSelectionPos = getUriPosition(mRingTones, mCurrentRingTone.second);
 
         @SuppressLint("InflateParams")
         View customView = LayoutInflater.from(getContext()).inflate(R.layout.layout_ringtone_dialog, null);
 
         //Set list
         mListView = customView.findViewById(R.id.ringtone_list);
-        mListView.setSelection(currentSelectionPos);
+
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -354,9 +354,13 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
         mRingTones.putAll(ringtone);
 
         final String[] itemTitles = mRingTones.keySet().toArray(new String[mRingTones.size()]);
+        int currentSelectionPos = getUriPosition(mRingTones, mCurrentRingTone.second);
+
         mListView.setAdapter(new ArrayAdapter<>(mContext,
                 android.R.layout.select_dialog_singlechoice,
                 itemTitles));
+        mListView.setSelection(currentSelectionPos);
+        mListView.setItemChecked(currentSelectionPos, true);
     }
 
     /**
