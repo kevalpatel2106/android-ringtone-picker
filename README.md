@@ -74,6 +74,9 @@ ringtonePickerBuilder.show();
 2. Make required changes and commit.
 3. Generate pull request. Mention all the required description regarding changes you made.
 
+## Logo:
+Ringtone picker logo is created by [zularizal](https://github.com/zularizal). 
+
 ## Questions:
 Hit me on twitter [![Twitter](https://img.shields.io/badge/Twitter-@kevalpatel2106-blue.svg?style=flat)](https://twitter.com/kevalpatel2106)
 
