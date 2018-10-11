@@ -257,7 +257,7 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
 
         //Add silent item first
         if (isDisplaySilent) {
-            mRingTones.put(getString(R.string.title_silent_list_item), Uri.parse("") /* No ringtone */);
+            mRingTones.put(getString(R.string.title_silent_list_item), Uri.EMPTY /* No ringtone */);
         }
 
         mLoaderTask = new RingtoneLoaderTask(mContext.getApplicationContext(), this);
