@@ -311,7 +311,11 @@ public final class RingtonePickerDialog extends DialogFragment implements Ringto
                 .setPositiveButton(mPositiveButtonTitle, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mListener.OnRingtoneSelected(mCurrentRingTone.first, mCurrentRingTone.second);
+                        if(mCurrentRingTone.first != null){
+                            mListener.OnRingtoneSelected(mCurrentRingTone.first, mCurrentRingTone.second);
+                        }else{
+                            dialog.dismiss();
+                        }
                     }
                 })
                 .setNegativeButton(mNegativeButtonTitle, null)
