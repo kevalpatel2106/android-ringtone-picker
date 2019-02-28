@@ -72,7 +72,7 @@
         android:layout_above="@id/cb_ringtone"
         android:text="Ringtone types: "/>
 
-    <android.support.v7.widget.SwitchCompat
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_default_ringtone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
         android:text="Add default ringtone"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
 
-    <android.support.v7.widget.SwitchCompat
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_silent_ringtone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
 
 
-    <android.support.v7.widget.SwitchCompat
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_play_ringtone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
