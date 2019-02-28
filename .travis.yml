@@ -20,8 +20,7 @@ android:
     components:
         - platform-tools
         - tools
-        - build-tools-27.0.3
-        - android-27
+        - android-28
 
         # Additional components
         - extra-google-m2repository
@@ -33,6 +32,8 @@ licenses:
     - 'google-gdk-license-.+'
     
 before_script:
+    - yes | sdkmanager --update
+    - yes | sdkmanager --licenses
     - chmod +x gradlew      #Grand permissions
 
 script:
